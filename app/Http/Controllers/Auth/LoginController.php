@@ -10,45 +10,80 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
+use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
     public function login(Request $request){
         try{
-            $request->validate([
+            // $request->validate([
+            //     'email' => 'email|required',
+            //     'password' => 'required',
+            // ]);
+            
+            $validator = Validator::make($request->all(), [
                 'email' => 'email|required',
                 'password' => 'required',
             ]);
 
-            $credentials = request(['email', 'password']);
+            // $credentials = request(['email', 'password']);
 
-            if (!Auth::attempt($credentials)){
+            // // if email is not found in DB
+            // if (!Auth::attempt($credentials)){
+            //     return response()->json([
+            //         'status_code' => 422,
+            //         'message' => 'Email address is not found!',
+            //     ]);
+            // };
+
+            // get user model by email or thow exception
+            $user =  User::where('email', $request->email)->firstOrFail();
+            // check password
+            if(!Hash::check($request->password, $user->password)){
                 return response()->json([
                     'status_code' => 422,
-                    'message' => 'Unauthorized',
-                    
+                    'message' => 'Password is not correct',                 
                 ]);
             }
 
-            $user =  User::where('email', $request->email)->first();
-
-            if(!Hash::check($request->password, $user->password, [])){
-                return response()->json([
-                    'status_code' => 422,
-                    'message' => 'Password is incorrect',
-                    
-                ]);
+            ////// if user and password match ////////
+            // delete if user has prev token
+            if($user->tokens()){
+                $user->tokens()->delete();
             }
-
-            $tokenResult = $user->createToken('authToken')->plainTextToken;
+            // create token using sanctum and response
+            $api_token = $user->createToken('authToken')->plainTextToken;
             return response()->json([
                 'status_code' => 200,
-                'access_token' => $tokenResult,
+                'access_token' => $api_token,
                 'token_type' => 'Bearer',
+                'user' => $user
             ]);
+        }
+        // ===========================================================================
 
-        }catch(Exception $error){
+        // if there is validation error
+        catch(Validationexception $error){
+            return response()->json([
+                'status_code' => 422,
+                'message' => 'Enter email and password correctly',
+                // 'error' => $error->validator,
+                'error' =>  $validator->errors()->all()
+            ], 422);
+        }
+        // if model is not found by email address
+        catch(ModelNotFoundException $error){
+            return response()->json([
+                'status_code' => 422,
+                'message' => 'Email address is not found',
+                'error' => $error,
+            ]);
+        }
+        // if there is some other error
+        catch(Exception $error){
             return response()->json([
                 'status_code' => 500,
                 'message' => 'Error in login',
