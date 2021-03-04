@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Lib\Helper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CommentsController extends Controller
 {
@@ -43,10 +44,21 @@ class CommentsController extends Controller
     public function store(Request $request)
     {
         // protected by sanctum middleware // user must be authenticated //
-        $this->validate($request, [
+        // $this->validate($request, [
+        //     'post_id' => 'required',
+        //     'comment' => 'required'
+        // ]);
+
+        $validator = Validator::make($request->all(), [
             'post_id' => 'required',
             'comment' => 'required'
         ]);
+        if($validator->fails()){
+            return response([
+                'message' => 'Validation error!',
+                'error' => $validator->errors()->all()
+            ], 422);
+        }
 
         $comment = new Comment();
 
@@ -90,9 +102,15 @@ class CommentsController extends Controller
         // if request has comment and user owns the comment, then update the comment
         if($request->has('comment') && ($comment->user_id == auth()->user()->id)) {
 
-            $this->validate($request, [
+            $validator = Validator::make($request->all(), [
                 'comment' => 'required'
             ]);
+            if($validator->fails()){
+                return response([
+                    'message' => 'Validation error!',
+                    'error' => $validator->errors()->all()
+                ], 422);
+            }    
 
             $comment->comment = $request->comment;
             $comment->save();
@@ -129,7 +147,7 @@ class CommentsController extends Controller
         // protected by sanctum middleware // user must be authenticated //
 
         $comment = Comment::findOrFail($id);
-        // if usert is admin, he can delete any comments
+        // if user is admin, he can delete any comments
         if(auth()->user()->is_admin) {
             $comment->delete();
             return response()->json(['message' => 'Deleted successfully'], 200);

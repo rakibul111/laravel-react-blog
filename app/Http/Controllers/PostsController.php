@@ -106,7 +106,9 @@ class PostsController extends Controller
 
         $post->content = $request->input('content');
 
-        $post->published = $request->input('published');
+        if($request->has('published')){
+            $post->published = $request->input('published');
+        }
 
         $post->category_id = $request->input('category_id');
 
@@ -129,7 +131,7 @@ class PostsController extends Controller
         // store tags
         // many to many association (intermediate table update)
         if($request->has('tags')) {
-            $post->tags($request->input('tag'))->sync($request->input('tags'));
+            $post->tags()->sync($request->input('tags'));
         }
 
         $post = Post::with('tags')->find($post->id);
@@ -203,7 +205,9 @@ class PostsController extends Controller
 
         $post->content = $request->input('content');
 
-        $post->published = $request->input('published');
+        if($request->has('published')){
+            $post->published = $request->input('published');
+        }
 
         $post->category_id = $request->input('category_id');
 
@@ -233,6 +237,7 @@ class PostsController extends Controller
         if($request->has('tags')) {
             $post->tags()->sync($request->input('tags'));
         }
+        $post = Post::with('tags')->find($post->id);
 
         return response()->json(['data' => $post, 'message' => 'Updated successfully'], 200);
     }
