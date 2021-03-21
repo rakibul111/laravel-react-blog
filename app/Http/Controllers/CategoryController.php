@@ -64,7 +64,7 @@ class CategoryController extends Controller
         if($validator->fails()){
             return response([
                 'message' => 'Validation error!',
-                'error' => $validator->errors()->all()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
         // $category = new Category();
@@ -126,7 +126,7 @@ class CategoryController extends Controller
         if($validator->fails()){
             return response([
                 'message' => 'Validation error!',
-                'error' => $validator->errors()->all()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 

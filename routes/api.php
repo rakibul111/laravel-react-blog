@@ -32,5 +32,7 @@ Route::resource('tags', TagsController::class);
 Route::resource('comments', CommentsController::class);
 
 // needs authenticationn
+Route::get('/checkAuth', [LoginController::class, 'checkAuth'])->name('checkAuth');
 Route::get('/profile', [UsersController::class, 'profile'])->name('profile');
+Route::put('/profile/update', [UsersController::class, 'updateProfile'])->name('updateProfile');
 Route::get('/logout', [UsersController::class, 'logout'])->name('logout');

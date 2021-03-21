@@ -67,7 +67,7 @@ class PostsController extends Controller
             return response()->json([
                 'status_code' => 500,
                 'message' => 'Error in fetching posts!',
-                'error' => $error,
+                'errors' => $error,
             ]);
         }
         
@@ -88,13 +88,15 @@ class PostsController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'content' => 'required',
-            'image' => 'required',      // field is required
             'category_id' => 'required'
         ]);
         if($validator->fails()){
             return response([
                 'message' => 'Validation error!',
-                'error' => $validator->errors()->all()
+
+                'errors' => ['title' => $validator->errors()->get('title'),
+                    'content' => $validator->errors()->get('content'),
+                    'category_id' => $validator->errors()->get('category_id')]
             ], 422);
         }
 
@@ -188,14 +190,17 @@ class PostsController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'content' => 'required',
-            'image' => 'required',      // field is required
             'category_id' => 'required',
             'published' => 'required'
         ]);
         if($validator->fails()){
             return response([
                 'message' => 'Validation error!',
-                'error' => $validator->errors()->all()
+                
+                'errors' => ['title' => $validator->errors()->get('title'),
+                    'content' => $validator->errors()->get('content'),
+                    'category_id' => $validator->errors()->get('category_id'),
+                    'published' =>$validator->errors()->get('published')]
             ], 422);
         }
 

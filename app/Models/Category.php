@@ -9,6 +9,13 @@ class Category extends Model
 {
     use HasFactory;
 
+    // getting the number of posts of a category
+    protected $appends = ['num_posts'];
+    public function getNumPostsAttribute()
+    {
+        return $this->posts()->count();
+    }
+
     /**
      * The attributes that are mass assignable.
      *

@@ -1,0 +1,24 @@
+.alert-danger {
+    color: red;
+}
+
+.alert-success {
+    color: green;
+}
+
+.error-block {
+    color: red;
+}
+
+.auth-links a {
+    color: orangered !important;
+    font-size: 10px !important;
+}
+
+#comments form label {
+    float: left !important;
+}
+
+#comments form .message label {
+    display: block !important;
+}

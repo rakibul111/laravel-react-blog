@@ -51,7 +51,7 @@ class TagsController extends Controller
         if($validator->fails()){
             return response([
                 'message' => 'Validation error!',
-                'error' => $validator->errors()->all()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 
@@ -110,7 +110,7 @@ class TagsController extends Controller
         if($validator->fails()){
             return response([
                 'message' => 'Validation error!',
-                'error' => $validator->errors()->all()
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 

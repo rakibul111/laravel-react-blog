@@ -53,7 +53,9 @@ class UsersController extends Controller
         if($validator->fails()){
             return response([
                 'message' => 'Validation error!',
-                'error' => $validator->errors()->all()
+                'errors' => ['name' => $validator->errors()->get('name'),
+                             'email' => $validator->errors()->get('email'),
+                             'password' => $validator->errors()->get('password')]
             ], 422);
         }
 
@@ -127,11 +129,13 @@ class UsersController extends Controller
         if($validator->fails()){
             return response([
                 'message' => 'Validation error!',
-                'error' => $validator->errors()->all()
+                'errors' => ['name' => $validator->errors()->get('name'),
+                             'email' => $validator->errors()->get('email'),
+                             'password' => $validator->errors()->get('password')]
             ], 422);
         }
 
-        // if the user will be admin or not
+        // will the user be admin or not
         if($request->has('is_admin') && $request->is_admin == 1) {
             $user->is_admin = 1;
         } else {
@@ -155,7 +159,7 @@ class UsersController extends Controller
         if(!auth()->user()->is_admin) {
             return response()->json(['message' => 'Unauthorize'], 500);
         }
-
+        User::findOrFail($id)->tokens()->delete();
         User::findOrFail($id)->delete();
 
         return response()->json(['message' => 'Deleted successfully'], 200);
@@ -168,6 +172,46 @@ class UsersController extends Controller
     public function profile()
     {
         return response()->json(['data' => auth()->user()], 200);
+    }
+
+    // update profile
+    public function updateProfile(Request $request)
+    {
+        if(!auth()->user()->is_admin) {
+            return response()->json(['message' => 'Unauthorize'], 500);
+        }
+
+        $user = auth()->user();
+
+        $validator = Validator::make($request->all(), [
+            // 'name' => 'required|unique:users,name,'.$user->id,
+            'name' => 'required|max:100',
+            // if requested email and user email same, no validation applied
+            'email' => ($request->email != $user->email ? 'required|email|unique:users,email,':''),
+            // if the password field is blank, no validation applied
+            'password' => ($request->password!=''?'min:6':''),
+        ]);
+
+        // if validation fails
+        if($validator->fails()){
+            return response([
+                'message' => 'Validation error!',
+                'errors' => ['name' => $validator->errors()->get('name'),
+                             'email' => $validator->errors()->get('email'),
+                             'password' => $validator->errors()->get('password')]
+            ], 422);
+        }
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        if($request->has('password') && !empty($request->password)) {
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
+        return response()->json(['data' => $user, 'message' => 'Profile updated successfully'], 200);
     }
 
     // Logout and delete the tokens

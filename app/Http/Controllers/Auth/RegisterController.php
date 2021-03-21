@@ -26,7 +26,9 @@ class RegisterController extends Controller
             if($validator->fails()){
                 return response([
                     'message' => 'Please input correctly.',
-                    'error' => $validator->errors()->all()
+                    'errors' => ['name' => $validator->errors()->get('name'),
+                                 'email' => $validator->errors()->get('email'),
+                                 'password' => $validator->errors()->get('password')]
                 ], 422);
             }
 
@@ -41,22 +43,21 @@ class RegisterController extends Controller
             }
 
             // Create token after registration
-            $tokenResult = $user->createToken('authToken')->plainTextToken;
+            $api_token = $user->createToken('authToken')->plainTextToken;
+            
             return response()->json([
-                'status_code' => 200,
                 'message' => 'Registration Successfull',
-                'access_token' => $tokenResult,
+                'api_token' => $api_token,
                 'token_type' => 'Bearer',
                 'user' => $user,
-            ]);
+            ],200);
             // ================================================================
 
         }catch(Exception $error){
             return response()->json([
-                'status_code' => 500,
                 'message' => 'Error in Registration',
-                'error' => $error,
-            ]);
+                'errors' => $error,
+            ], 500);
         }
     }
 }

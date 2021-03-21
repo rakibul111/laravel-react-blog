@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("auth:sanctum")->only('checkAuth');
+    }
+
     public function login(Request $request){
         try{
             // $request->validate([
@@ -46,7 +51,7 @@ class LoginController extends Controller
                 return response()->json([
                     'status_code' => 422,
                     'message' => 'Password is not correct',                 
-                ]);
+                ], 422);
             }
 
             ////// if user and password match ////////
@@ -58,7 +63,7 @@ class LoginController extends Controller
             $api_token = $user->createToken('authToken')->plainTextToken;
             return response()->json([
                 'status_code' => 200,
-                'access_token' => $api_token,
+                'api_token' => $api_token,
                 'token_type' => 'Bearer',
                 'user' => $user
             ]);
@@ -80,7 +85,7 @@ class LoginController extends Controller
                 'status_code' => 422,
                 'message' => 'Email address is not found',
                 'error' => $error,
-            ]);
+            ], 422);
         }
         // if there is some other error
         catch(Exception $error){
@@ -91,4 +96,16 @@ class LoginController extends Controller
             ]);
         }
     }
+
+    // needs authentication
+    public function checkAuth(){
+
+        if(auth()->user()->is_admin) {
+            return response()->json(['auth' => true, 'message' => 'User is Admin'], 200);
+        }
+        else{
+            return response()->json(['auth' => false, 'message' => 'Unauthorized!'], 500);
+        }
+    }
+
 }

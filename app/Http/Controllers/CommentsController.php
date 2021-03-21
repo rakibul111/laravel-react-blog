@@ -56,7 +56,8 @@ class CommentsController extends Controller
         if($validator->fails()){
             return response([
                 'message' => 'Validation error!',
-                'error' => $validator->errors()->all()
+                'errors' => [ 'post_id' => $validator->errors()->get('post_id'),
+                              'comment' => $validator->errors()->get('comment')]                          
             ], 422);
         }
 
@@ -108,7 +109,7 @@ class CommentsController extends Controller
             if($validator->fails()){
                 return response([
                     'message' => 'Validation error!',
-                    'error' => $validator->errors()->all()
+                    'errors' => [ 'comment' => $validator->errors()->get('comment')]
                 ], 422);
             }    
 
@@ -118,7 +119,7 @@ class CommentsController extends Controller
         }
         // ================================================================================
 
-        // if request has approved then update the approved
+        // if request has 'approved' field then update the approved
         // only for admin
         elseif(isset($request->approved)) {
 
@@ -130,6 +131,15 @@ class CommentsController extends Controller
             $comment->save();
             return response()->json(['data' => $comment, 'message' => 'Updated successfully'], 200);
         }
+
+        //  if user is not owner of the comment
+        elseif($request->has('comment') && ($comment->user_id != auth()->user()->id)) {
+            return response()->json([
+                'message' => 'Unauthorized!',
+                'errors' => [ 'comment' => 'Only owner can edit comment!']
+            ], 500);
+        }
+
         // if there is no comment/approved update
         else{
             return response()->json(['message' => 'Unexpected query!'], 500);
