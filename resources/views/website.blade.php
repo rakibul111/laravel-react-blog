@@ -1,4 +1,12 @@
-secure_asset('assets/website')}}/css/default.css">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Laravel React Blog</title>
+
+    <link rel='stylesheet' href="{{ secure_asset('assets/website')}}/css/default.css">
     <link rel='stylesheet' href="{{ secure_asset('assets/website')}}/css/fonts.css">
     <link rel='stylesheet' href="{{ secure_asset('assets/website')}}/css/layout.css">
     <link rel='stylesheet' href="{{ secure_asset('assets/website')}}/css/media-queries.css">
