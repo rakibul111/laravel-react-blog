@@ -7,18 +7,18 @@
     <title>React Laravel Blog | Admin</title>
 
     <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="{{ asset('assets/admin') }}/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ secure_asset('assets/admin') }}/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('assets/admin') }}/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ secure_asset('assets/admin') }}/bower_components/font-awesome/css/font-awesome.min.css">
 
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('assets/admin') }}/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="{{ secure_asset('assets/admin') }}/dist/css/AdminLTE.min.css">
 
     <!-- Theme skin -->
-    <link rel="stylesheet" href="{{ asset('assets/admin') }}/dist/css/skins/skin-green.css">
+    <link rel="stylesheet" href="{{ secure_asset('assets/admin') }}/dist/css/skins/skin-green.css">
 
     <!-- bootstrap wysihtml5 - text editor -->
-    <link rel="stylesheet" href="{{ asset('assets/admin') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+    <link rel="stylesheet" href="{{ secure_asset('assets/admin') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
     <!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -36,18 +36,18 @@
 
 
     <!-- Main app script -->
-    <script src="{{ asset('js/admin.js') }}" type="text/javascript"></script>
+    <script src="{{ secure_asset('js/admin.js') }}" type="text/javascript"></script>
 
     <!-- jQuery 3 -->
-    <script src="{{ asset('assets/admin') }}/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="{{ secure_asset('assets/admin') }}/bower_components/jquery/dist/jquery.min.js"></script>
 
     <!-- Bootstrap 3.3.7 -->
     <script src="{{ asset('assets/admin') }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Bootstrap WYSIHTML5 -->
-    <script src="{{ asset('assets/admin') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+    <script src="{{ secure_asset('assets/admin') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="{{ asset('assets/admin') }}/dist/js/adminlte.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('assets/admin') }}/dist/js/demo.js"></script>
+    <script src="{{ secure_asset('assets/admin') }}/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes
+    <script src="{{ secure_asset('assets/admin') }}/dist/js/demo.js"></script> -->
 </body>
 </html>
