@@ -18,7 +18,7 @@ class Home extends React.Component
 
     componentDidMount()
     {
-        // Loading before the post is fetched
+        // show Loading before the post is fetched
         this.setState({
             spinner: true
         });
